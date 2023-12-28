@@ -10,14 +10,14 @@ func shpToGeomFeature(shp *Shape) *geom.Feature {
 	return &geom.Feature{ID: uint64(shp.Id), BoundingBox: shpToGeomBoundingBox(shp), Geometry: g, Properties: shp.Attrs}
 }
 
-func shpToGeomBoundingBox(shp *Shape) geom.BoundingBox {
+func shpToGeomBoundingBox(shp *Shape) *geom.BoundingBox {
 	switch shp.Type {
 	case ShapePoint, ShapePointM, ShapeMultiPoint, ShapeMultiPointM, ShapePolyLine, ShapePolyLineM, ShapePolygon, ShapePolygonM:
-		return geom.BoundingBox{shp.Box.Min.X, shp.Box.Min.Y, shp.Box.Max.X, shp.Box.Max.Y}
+		return &geom.BoundingBox{{shp.Box.Min.X, shp.Box.Min.Y, 0}, {shp.Box.Max.X, shp.Box.Max.Y, 0}}
 	case ShapePointZ, ShapeMultiPointZ, ShapePolyLineZ, ShapePolygonZ:
-		return geom.BoundingBox{shp.Box.Min.X, shp.Box.Min.Y, shp.Box.Min.Z, shp.Box.Max.X, shp.Box.Max.Y, shp.Box.Max.Z}
+		return &geom.BoundingBox{{shp.Box.Min.X, shp.Box.Min.Y, shp.Box.Min.Z}, {shp.Box.Max.X, shp.Box.Max.Y, shp.Box.Max.Z}}
 	}
-	return geom.BoundingBox{}
+	return &geom.BoundingBox{}
 }
 
 func shpToGeometry(shp *Shape) geom.Geometry {
